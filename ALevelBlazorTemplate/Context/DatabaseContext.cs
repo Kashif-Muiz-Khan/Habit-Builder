@@ -9,6 +9,8 @@ namespace ALevelBlazorTemplate.Context
     {
         private IWebHostEnvironment _environment;
 
+        public DbSet<Habit> Habits { get; set; }
+        public DbSet<Order> Orders { get; set; }
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options, IWebHostEnvironment environment) : base(options)
         {
@@ -22,7 +24,7 @@ namespace ALevelBlazorTemplate.Context
             {
                 Directory.CreateDirectory(folder);
             }
-            optionbuilder.UseSqlite($"Data Source={folder}/database.db");
+            optionbuilder.UseSqlite($"Data Source={folder}/habit.db");
         }
     }
 }

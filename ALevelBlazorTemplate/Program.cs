@@ -1,10 +1,9 @@
-using ALevelBlazorTemplate.Components;
-using ALevelBlazorTemplate.Components.Account;
-using ALevelBlazorTemplate.Context;
-using ALevelBlazorTemplate.Model;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
-
+using ALevelBlazorTemplate.Components.Account;
+using ALevelBlazorTemplate.Components;
+using ALevelBlazorTemplate.Context;
+using ALevelBlazorTemplate.Model;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,26 +27,27 @@ builder.Services.AddAuthentication(options =>
 
 
 
-builder.Services.AddScoped<DatabaseSeeder>();
 builder.Services.AddDbContext<DatabaseContext>();
+builder.Services.AddScoped<DatabaseSeeder>();
 
 
 
 
 
 builder.Services.AddIdentityCore<User>()
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<DatabaseContext>()
     .AddSignInManager();
 
-
+builder.Services.AddLocalization();
 
 var app = builder.Build();
+
+
 
 using var scope = app.Services.CreateScope();
 var seeder = scope.ServiceProvider.GetService<DatabaseSeeder>();
 await seeder!.Seed();
-
-
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
