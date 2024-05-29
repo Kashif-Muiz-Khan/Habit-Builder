@@ -1,86 +1,62 @@
-﻿@* @using ALevelBlazorTemplate.Context
+﻿@using ALevelBlazorTemplate.Context
 @using ALevelBlazorTemplate.Model
 @using ApexCharts
-@using System.ComponentModel.DataAnnotations
-@inject DatabaseContext DatabaseContext
+@using Microsoft.AspNetCore.Components.Authorization
+@inject UserProvider UserProvider
 @inject OrderProvider OrderProvider
 
 
 
 <h3>HabitGraph</h3>
 
-<div class="d-flex" style="width: 25rem; height: auto;">
-    <ApexChart TItem="Order" Title="Habit Tracker">
-        <ApexPointSeries TItem="Order"
-                         Items="orderProvider.Orders"
-                         Name="Points"
-                         SeriesType="SeriesType.Area"
-                         XValue="e => e.Day"
-                         YValue="e => e.TotalPoints" />
-    </ApexChart>
+
+
+<div class="card">
+
+<ApexChart TItem="MyData"
+           Title="Order Chart">
+
+    <ApexPointSeries TItem="MyData"
+                     Items="Data"
+                     Name="Total Revenue"
+                     SeriesType="SeriesType.Area"
+                     XValue="e => e.Order"
+                     YValue="e=> e.Total" />
+
+
+</ApexChart>
 </div>
 
-<br />
-<br />
 
-<EditForm Model="@habitModel" OnValidSubmit="@HandleSubmit">
-    <DataAnnotationsValidator />
-
-    <div class="col-12 col-xl-4 mb-3">
-        <div class="card h-100">
-            <div class="card-body bg-light d-flex flex-column">
-                <h4 class="card-title">Habit Tracker</h4>
-
-                <div class="form-group mb-2">
-                    <label for="day">Day</label>
-                    <InputText id="day" class="form-control" @bind-Value="@habitModel.Day" placeholder="Day" />
-                    <div class="small">
-                        <ValidationMessage For="@(() => habitModel.Day)" />
-                    </div>
-                </div>
-                <div class="form-group mb-2">
-                    <label for="point">Point</label>
-                    <div class="input-group">
-                        <InputNumber id="point" class="form-control" @bind-Value="@habitModel.Point" placeholder="1" min="1" max="10000" step="1" />
-                        <div class="small">
-                            <ValidationMessage For="@(() => habitModel.Point)" />
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-auto">
-                    <button type="submit" class="btn btn-outline-primary w-100">Submit</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</EditForm>
 
 @code {
-    private Habit habitModel = new Habit();
-    private OrderProvider orderProvider;
+    private IEnumerable<Order>? orders;
+    private Order? selectedOrder;
 
-    protected override void OnInitialized()
+    protected async override Task OnInitializedAsync()
     {
-        orderProvider = new OrderProvider(DatabaseContext); // Instantiate OrderProvider
-        LoadOrders();
-    }
 
-    private async Task LoadOrders()
-    {
-        var orders = await orderProvider.GetAllOrdersAsync();
-        // Assign the orders to the orderProvider
-        orderProvider.Orders = orders;
-    }
+        orders = await OrderProvider.GetAllOrdersAsync();
+        selectedOrder = orders?.FirstOrDefault();
 
-    private async Task HandleSubmit()
-    {
-        await orderProvider.CreateOrder(new User(), new List<OrderItem>
+        foreach (Order order in orders)
         {
-            new OrderItem { Habit = habitModel.Name } // Assuming habitModel.Day is the habit name
-        });
-        await LoadOrders(); // Reload orders after submission
-        habitModel = new Habit(); // Reset the model after submission
+            Data.Add(new MyData { Order = $"{order.Id}", Total = order.TotalPoints });
+        }
     }
+
+
+
+
+    private List<MyData> Data { get; set; } = new();
+
+
+
+    public class MyData
+    {
+        public string Order { get; set; }
+        public decimal Total { get; set; }
+    }
+
+
 }
-}
- *@

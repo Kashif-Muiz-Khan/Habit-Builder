@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 
-namespace MyCheeseShop.Context
+namespace ALevelBlazorTemplate.Context
 {
     public class UserProvider
     {

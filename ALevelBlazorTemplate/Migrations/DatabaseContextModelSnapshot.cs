@@ -23,6 +23,10 @@ namespace ALevelBlazorTemplate.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Difficulty")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -35,6 +39,10 @@ namespace ALevelBlazorTemplate.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("imageUrl")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
