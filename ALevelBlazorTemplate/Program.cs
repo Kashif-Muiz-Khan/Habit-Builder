@@ -4,6 +4,7 @@ using ALevelBlazorTemplate.Components.Account;
 using ALevelBlazorTemplate.Components;
 using ALevelBlazorTemplate.Context;
 using ALevelBlazorTemplate.Model;
+using ApexCharts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +33,8 @@ builder.Services.AddScoped<DatabaseSeeder>();
 builder.Services.AddScoped<HabitProvider>();
 builder.Services.AddScoped<OrderProvider>();
 builder.Services.AddScoped<UserProvider>();
+builder.Services.AddQuickGridEntityFrameworkAdapter();
+
 
 
 

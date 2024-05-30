@@ -27,25 +27,48 @@ namespace ALevelBlazorTemplate.Context
                 .ToListAsync();
         }
 
+        public IQueryable<Order> GetAllOrders()
+        {
+            // Return IQueryable<Order>
+            return _context.Orders
+                .Include(order => order.User)
+                .Include(order => order.Items)
+                .ThenInclude(item => item.Habit)
+                .OrderBy(order => order.Id);
+        }
+
+
         public async Task CreateOrder(User user, IEnumerable<OrderItem> items)
         {
             // Create a new order
             var order = new Order
             {
                 User = user,
-                Items = items.Select(item => new OrderItem
-                {
-                    Habit = item.Habit
-                }).ToList(),
-                Day = DateOnly.FromDateTime(DateTime.Now),
+                Items = items.ToList(), // Materialize the items into a list
+                Day = DateOnly.FromDateTime(DateTime.Now)
             };
+
+            // Calculate total points for the order
+            var totalPoints = order.Items.Sum(item => item.Habit.Point);
+            order.TotalPoints = totalPoints;
 
             // Add the order to the database
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
         }
 
-        
+        public async Task DeleteOrder(Order order)
+        {
+            _context.Orders.Remove(order);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateOrderAsync(Order order)
+        {
+            _context.Orders.Update(order);
+            await _context.SaveChangesAsync();
+        }
+
 
         public async Task<Order?> GetOrderAsync(int id)
         {

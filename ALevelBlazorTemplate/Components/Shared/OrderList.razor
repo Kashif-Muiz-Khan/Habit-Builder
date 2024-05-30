@@ -1,0 +1,78 @@
+﻿@rendermode InteractiveServer
+@using ALevelBlazorTemplate.Context
+@using ALevelBlazorTemplate.Model
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using Microsoft.EntityFrameworkCore
+@inject OrderProvider OrderProvider
+@inject NavigationManager NavigationManager
+
+
+
+
+
+
+
+@if (Orders == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div>
+        <QuickGrid Theme="order" Class="table" Items="@Orders" Pagination="@pagination">
+            <PropertyColumn Property="@(p => p.Id)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.Day)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.TotalPoints)" Sortable="true" />
+            <PropertyColumn Property="@(p => p.Items.Count)" Sortable="true" />
+            <TemplateColumn Title="Edit">
+                <button class="btn btn-success" @onclick="() => Edit(context)">Edit</button>
+            </TemplateColumn>
+            <TemplateColumn Title="Delete">
+                <button class="btn btn-danger" @onclick="() => Delete(context)">Delete</button>
+            </TemplateColumn>
+            <TemplateColumn Title="Info">
+                <button class="btn btn-primary" @onclick="() => ShowInfo(context)">Info</button>
+            </TemplateColumn>
+        </QuickGrid>
+        <Paginator State="@pagination" />
+    </div>
+}
+
+@code {
+
+
+
+    private PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
+    private string nameSearch;
+
+
+    public IQueryable<Order>? Orders { get; set; }
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        Orders = OrderProvider.GetAllOrders();
+    }
+
+
+
+
+    private void ShowInfo(Order order)
+    {
+        NavigationManager.NavigateTo($"/Info/{order.Id}");
+    }
+
+    private async void Edit(Order order)
+    {
+        await OrderProvider.UpdateOrderAsync(order);
+    }
+
+
+    private async Task Delete(Order order)
+    {
+        await OrderProvider.DeleteOrder(order);
+        StateHasChanged();
+        NavigationManager.NavigateTo("/order", true);
+    }
+} 

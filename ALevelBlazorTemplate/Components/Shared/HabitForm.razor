@@ -2,7 +2,7 @@
 @using ALevelBlazorTemplate.Model
 @using Microsoft.EntityFrameworkCore
 @rendermode InteractiveServer
-@inject DatabaseContext DbContext
+@inject HabitProvider HabitProvider
 @inject NavigationManager NavigationManager
 
 
@@ -87,12 +87,12 @@
     private async Task Submit()
     {
         if (Model.Id == 0)
-            DbContext.Habits.Add(Model);
+            HabitProvider.AddHabitAsync(Model);
         else
-            DbContext.Habits.Update(Model);
+            HabitProvider.UpdateHabitAsync(Model);
 
-        await DbContext.SaveChangesAsync();
         await OnSaved.InvokeAsync();
+        NavigationManager.NavigateTo("/habit", true);
     }
 
 

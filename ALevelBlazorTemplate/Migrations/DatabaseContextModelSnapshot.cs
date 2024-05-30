@@ -63,6 +63,9 @@ namespace ALevelBlazorTemplate.Migrations
                     b.Property<DateOnly>("Day")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("TotalPoints")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("UserId")
                         .HasColumnType("TEXT");
 

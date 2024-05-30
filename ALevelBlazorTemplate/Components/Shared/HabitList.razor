@@ -3,7 +3,7 @@
 @using ALevelBlazorTemplate.Model
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using Microsoft.EntityFrameworkCore
-@inject DatabaseContext DbContext
+@inject HabitProvider HabitProvider
 @inject NavigationManager NavigationManager
 
 
@@ -19,12 +19,12 @@
 else
 {
     <div>
-        <QuickGrid Theme="pokemon" Class="table" Items="@FilteredHabit" Pagination="@pagination">
+        <QuickGrid Theme="habit" Class="table" Items="@FilteredHabit" Pagination="@pagination">
             <PropertyColumn Property="@(p => p.Id)" Sortable="true" />
             <PropertyColumn Property="@(p => p.Name)" Sortable="true">
                 <ColumnOptions>
                     <div class="search-box">
-                        <input type="search" autofocus @bind="nameSearch" @bind:event="oninput" placeholder="Pokemon name..." />
+                        <input type="search" autofocus @bind="nameSearch" @bind:event="oninput" placeholder="Habit name..." />
                     </div>
                 </ColumnOptions>
             </PropertyColumn>
@@ -87,8 +87,7 @@ else
 
     private async void Delete(Habit habit)
     {
-        DbContext.Habits.Remove(habit);
-        await DbContext.SaveChangesAsync();
-        await OnDeleteClicked.InvokeAsync(habit);
+        HabitProvider.DeleteHabitAsync(habit);
+        StateHasChanged();
     }
 }

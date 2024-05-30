@@ -23,6 +23,12 @@ namespace ALevelBlazorTemplate.Context
             await _context.SaveChangesAsync();
         }
 
+        public async Task DeleteHabitAsync(Habit habits)
+        {
+            _context.Habits.Remove(habits);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task UpdateHabitAsync(Habit habits)
         {
             _context.Habits.Update(habits);

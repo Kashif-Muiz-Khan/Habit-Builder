@@ -5,24 +5,25 @@
 namespace ALevelBlazorTemplate.Migrations
 {
     /// <inheritdoc />
-    public partial class Habit2 : Migration
+    public partial class Habita : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RenameColumn(
-                name: "IsSelected",
-                table: "Habits",
-                newName: "IsChecked");
+            migrationBuilder.AddColumn<int>(
+                name: "TotalPoints",
+                table: "Orders",
+                type: "INTEGER",
+                nullable: false,
+                defaultValue: 0);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RenameColumn(
-                name: "IsChecked",
-                table: "Habits",
-                newName: "IsSelected");
+            migrationBuilder.DropColumn(
+                name: "TotalPoints",
+                table: "Orders");
         }
     }
 }

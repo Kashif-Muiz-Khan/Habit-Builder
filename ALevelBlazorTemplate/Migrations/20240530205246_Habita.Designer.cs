@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ALevelBlazorTemplate.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20240529201454_Habit2")]
-    partial class Habit2
+    [Migration("20240530205246_Habita")]
+    partial class Habita
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -65,6 +65,9 @@ namespace ALevelBlazorTemplate.Migrations
 
                     b.Property<DateOnly>("Day")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("TotalPoints")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("UserId")
                         .HasColumnType("TEXT");
