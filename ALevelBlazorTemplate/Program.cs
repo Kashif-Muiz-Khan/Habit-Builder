@@ -29,6 +29,9 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddDbContext<DatabaseContext>();
 builder.Services.AddScoped<DatabaseSeeder>();
+builder.Services.AddScoped<HabitProvider>();
+builder.Services.AddScoped<OrderProvider>();
+builder.Services.AddScoped<UserProvider>();
 
 
 

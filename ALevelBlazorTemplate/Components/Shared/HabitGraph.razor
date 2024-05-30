@@ -5,58 +5,39 @@
 @inject UserProvider UserProvider
 @inject OrderProvider OrderProvider
 
-
-
 <h3>HabitGraph</h3>
 
-
-
 <div class="card">
-
-<ApexChart TItem="MyData"
-           Title="Order Chart">
-
-    <ApexPointSeries TItem="MyData"
-                     Items="Data"
-                     Name="Total Revenue"
-                     SeriesType="SeriesType.Area"
-                     XValue="e => e.Order"
-                     YValue="e=> e.Total" />
-
-
-</ApexChart>
+    <ApexChart TItem="MyData" Title="Order Chart">
+        <ApexPointSeries TItem="MyData" Items="Data" Name="Total Points" SeriesType="SeriesType.Area" XValue="e => e.Order" YValue="e => e.Total" />
+    </ApexChart>
 </div>
-
-
 
 @code {
     private IEnumerable<Order>? orders;
-    private Order? selectedOrder;
-
-    protected async override Task OnInitializedAsync()
-    {
-
-        orders = await OrderProvider.GetAllOrdersAsync();
-        selectedOrder = orders?.FirstOrDefault();
-
-        foreach (Order order in orders)
-        {
-            Data.Add(new MyData { Order = $"{order.Id}", Total = order.TotalPoints });
-        }
-    }
-
-
-
-
     private List<MyData> Data { get; set; } = new();
 
+    protected override async Task OnInitializedAsync()
+    {
+        orders = await OrderProvider.GetAllOrdersAsync();
+        CalculateTotalPoints();
+    }
 
+    private void CalculateTotalPoints()
+    {
+        if (orders != null)
+        {
+            foreach (var order in orders)
+            {
+                var totalPoints = order.Items.Sum(item => item.Habit.Point);
+                Data.Add(new MyData { Order = order.Id.ToString(), Total = totalPoints });
+            }
+        }
+    }
 
     public class MyData
     {
         public string Order { get; set; }
         public decimal Total { get; set; }
     }
-
-
 }

@@ -23,6 +23,9 @@ namespace ALevelBlazorTemplate.Model
 
         [Required(ErrorMessage = "Please enter the ImageUrl")]
         public string imageUrl { get; set; }
+
+        public bool IsChecked { get; set; }
+
     }
 
 }

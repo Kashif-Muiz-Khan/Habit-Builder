@@ -14,15 +14,16 @@ namespace ALevelBlazorTemplate.Context
             _context = context;
         }
 
-        
+
 
         public async Task<List<Order>?> GetAllOrdersAsync()
         {
             // Return all orders
             return await _context.Orders
-                .Include(order => order.Day)
-                .Include(order => order.TotalPoints)
-                .OrderByDescending(order => order.Id)
+                .Include(order => order.User)
+                .Include(order => order.Items)
+                .ThenInclude(item => item.Habit)
+                .OrderBy(order => order.Id)
                 .ToListAsync();
         }
 
@@ -52,7 +53,8 @@ namespace ALevelBlazorTemplate.Context
             return await _context.Orders
                 .Include(order => order.User)
                 .Include(order => order.Items)
-                .ThenInclude(item => item.Habit)
+                .ThenInclude(item => item.Habit.Id)
+                .Include(item => item.TotalPoints)
                 .FirstOrDefaultAsync(order => order.Id == id);
         }
 
